@@ -1,20 +1,22 @@
 [package]
-name = "tracing-logfmt"
-version = "0.3.3"
+name = "tracing-logfmt-otel"
+version = "0.1.0"
 edition = "2021"
-authors = ["Embark <opensource@embark-studios.com>"]
+authors = ["ElKowar <mail@elkowar.dev>", "Embark <opensource@embark-studios.com>"]
 license = "MIT OR Apache-2.0"
-description = "A logfmt formatter for tracing events and spans"
-homepage = "https://github.com/EmbarkStudios/tracing-logfmt"
-repository = "https://github.com/EmbarkStudios/tracing-logfmt"
-keywords = ["logging", "tracing"]
+description = "A fork of tracing-logfmt with added support for opentelemetry span data"
+homepage = "https://github.com/elkowar/tracing-logfmt"
+repository = "https://github.com/elkowar/tracing-logfmt"
+keywords = ["logging", "tracing", "opentelemetry"]
 readme = "README.md"
 
 [dependencies]
 nu-ansi-term = { version = "0.49", optional = true }
+opentelemetry_api = "0.20.0"
 time = { version = "0.3.7", features = ["formatting"] }
 tracing = "0.1"
 tracing-core = "0.1"
+tracing-opentelemetry = "0.21.0"
 tracing-subscriber = { version = "0.3", default-features = false, features = ["fmt"] }
 
 [features]
