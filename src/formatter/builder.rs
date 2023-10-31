@@ -70,6 +70,10 @@ impl Builder {
         self.events.with_ansi_color = enable;
         self
     }
+    pub fn with_otel_data(mut self, enable: bool) -> Self {
+        self.events.with_otel_data = enable;
+        self
+    }
 
     pub fn layer<S>(self) -> Layer<S, FieldsFormatter, EventsFormatter>
     where
