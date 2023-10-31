@@ -12,10 +12,10 @@
 
 [![Embark](https://img.shields.io/badge/embark-open%20source-blueviolet.svg)](https://embark.dev)
 [![Embark](https://img.shields.io/badge/discord-embark-%237289da.svg?logo=discord)](https://discord.gg/dAuKfZS)
-[![Crates.io](https://img.shields.io/crates/v/tracing-logfmt.svg)](https://crates.io/crates/tracing-logfmt)
-[![Docs](https://docs.rs/tracing-logfmt/badge.svg)](https://docs.rs/tracing-logfmt)
-[![dependency status](https://deps.rs/repo/github/EmbarkStudios/tracing-logfmt/status.svg)](https://deps.rs/repo/github/EmbarkStudios/tracing-logfmt)
-[![Build status](https://github.com/EmbarkStudios/tracing-logfmt/workflows/CI/badge.svg)](https://github.com/EmbarkStudios/tracing-logfmt/actions)
+[![Crates.io](https://img.shields.io/crates/v/tracing-logfmt-otel.svg)](https://crates.io/crates/tracing-logfmt-otel)
+[![Docs](https://docs.rs/tracing-logfmt-otel/badge.svg)](https://docs.rs/tracing-logfmt-otel)
+[![dependency status](https://deps.rs/repo/github/elkowar/tracing-logfmt-otel/status.svg)](https://deps.rs/repo/github/elkowar/tracing-logfmt-otel)
+[![Build status](https://github.com/elkowar/tracing-logfmt-otel/workflows/CI/badge.svg)](https://github.com/elkowar/tracing-logfmt-otel/actions)
 </div>
 
 ## Opentelemetry support
