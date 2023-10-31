@@ -20,7 +20,7 @@ pub struct Builder {
 /// use tracing_subscriber::layer::SubscriberExt;
 ///
 /// let subscriber = Registry::default()
-///     .with(tracing_logfmt::builder().with_span_path(false).layer());
+///     .with(tracing_logfmt_otel::builder().with_span_path(false).layer());
 ///
 /// dispatcher::set_global_default(Dispatch::new(subscriber))
 ///     .expect("Global logger has already been set!");
@@ -55,6 +55,18 @@ impl Builder {
     }
     pub fn with_otel_data(mut self, enable: bool) -> Self {
         self.events.with_otel_data = enable;
+        self
+    }
+    pub fn with_file(mut self, enable: bool) -> Self {
+        self.events.with_file = enable;
+        self
+    }
+    pub fn with_line(mut self, enable: bool) -> Self {
+        self.events.with_line = enable;
+        self
+    }
+    pub fn with_module(mut self, enable: bool) -> Self {
+        self.events.with_module = enable;
         self
     }
 

@@ -21,7 +21,7 @@ use crate::serializer::{Serializer, SerializerError};
 /// use tracing_subscriber::layer::SubscriberExt;
 ///
 /// let subscriber = Registry::default()
-///     .with(tracing_logfmt::layer());
+///     .with(tracing_logfmt_otel::layer());
 ///
 /// dispatcher::set_global_default(Dispatch::new(subscriber))
 ///     .expect("Global logger has already been set!");
@@ -40,6 +40,9 @@ pub struct EventsFormatter {
     pub(crate) with_span_name: bool,
     pub(crate) with_span_path: bool,
     pub(crate) with_otel_data: bool,
+    pub(crate) with_file: bool,
+    pub(crate) with_line: bool,
+    pub(crate) with_module: bool,
 }
 
 impl Default for EventsFormatter {
@@ -50,6 +53,9 @@ impl Default for EventsFormatter {
             with_span_name: true,
             with_span_path: true,
             with_otel_data: true,
+            with_file: true,
+            with_line: true,
+            with_module: true,
         }
     }
 }
@@ -109,6 +115,21 @@ where
 
             if self.with_target {
                 serializer.serialize_entry("target", metadata.target())?;
+            }
+            if self.with_module {
+                if let Some(module_path) = metadata.module_path() {
+                    serializer.serialize_entry("module", module_path)?;
+                }
+            }
+            if self.with_file {
+                if let Some(file) = metadata.file() {
+                    serializer.serialize_entry("file", file)?;
+                }
+            }
+            if self.with_line {
+                if let Some(line) = metadata.line() {
+                    serializer.serialize_entry_no_quote("line", line)?;
+                }
             }
 
             let span = if self.with_span_name || self.with_span_path || self.with_otel_data {
@@ -549,7 +570,7 @@ mod tests {
 
         let content = mock_writer.get_content();
         let message = make_ansi_key_value("message", "=message");
-        let target = make_ansi_key_value("target", "=tracing_logfmt::formatter::tests");
+        let target = make_ansi_key_value("target", "=tracing_logfmt_otel::formatter::tests");
         let ts = make_ansi_key_value("ts", "=");
 
         println!("{}", content);
