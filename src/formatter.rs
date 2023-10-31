@@ -111,7 +111,7 @@ where
                 serializer.serialize_entry("target", metadata.target())?;
             }
 
-            let span = if self.with_span_name || self.with_span_path {
+            let span = if self.with_span_name || self.with_span_path || self.with_otel_data {
                 event
                     .parent()
                     .and_then(|id| ctx.span(id))

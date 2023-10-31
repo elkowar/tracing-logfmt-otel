@@ -1,0 +1,44 @@
+name: tagged-release
+run-name: Publish for tagged version
+defaults:
+  run:
+    shell: bash
+
+on:
+  push:
+    tags:
+      # Run on new tag that matches "release/v[...]"
+      - "release/v*"
+
+env:
+  CARGO_REGISTRY_TOKEN: ${{ vars.CARGO_REGISTRY_TOKEN }}
+
+
+jobs:
+  check-and-test:
+    name: Check and Test
+    uses: ./.github/workflows/rust-ci.yml
+    secrets: inherit
+
+  publish:
+    needs: [check-and-test]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: olegtarasov/get-tag@v2.1.2
+        id: tagName
+        with:
+          tagRegex: "release/v(?<version>.*)" 
+
+      - name: Check if tag matches current version in Cargo.toml
+        run: |
+          CRATE="tracing-logfmt-otel"
+          VERSION="${{ steps.tagName.outputs.version }}"
+          ACTUAL="$(cargo pkgid -p "$CRATE" | sed -n 's/.*#\(.*\)/\1/p')"
+          if [ "$ACTUAL" != "$VERSION" ]; then
+            echo "release tag version doesn't match the version in Cargo.toml:"
+            echo "tag was $VERSION but $CRATE had version $ACTUAL"
+            exit 1
+          fi
+      - name: Publish to rust registry
+        run: cargo publish -p tracing-logfmt-otel
