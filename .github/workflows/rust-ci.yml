@@ -2,8 +2,6 @@ on:
   push:
     branches:
       - main
-    tags:
-      - "*"
   pull_request:
 
 name: CI
@@ -12,62 +10,23 @@ jobs:
     name: Lint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          override: true
+      - uses: actions/checkout@v3
+      - name: Load build cache
+        uses: Swatinem/rust-cache@v2
+      - name: Set github problem matcher for rust
+        uses: r7kamura/rust-problem-matchers@v1
+      - name: Format check
+        run: cargo fmt --check
+      - name: Check docs
+        run: cargo doc --no-deps --document-private-items --all-features
+      - name: Lint with all features and compile targets
+        run: cargo clippy --all-features --all-targets --no-deps -- --deny warnings
+      - name: Test with all features and compile targets
+        run: cargo test --all-features --all-targets
+      - name: Run Cargo deny
+        uses: EmbarkStudios/cargo-deny-action@v1
 
-      # make sure all code has been formatted with rustfmt
-      - name: check rustfmt
-        run: |
-          rustup component add rustfmt
-          cargo fmt -- --check --color always
-
-      # run clippy to verify we have no warnings
-      - run: cargo fetch
-      - name: cargo clippy
-        run: |
-          rustup component add clippy
-          cargo clippy --all-targets --all-features -- -D warnings
-
-  test:
-    name: Test
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macOS-latest]
-    runs-on: ${{ matrix.os }}
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          override: true
-      - run: cargo fetch
-      - name: cargo test build
-        # Note the use of release here means longer compile time, but much
-        # faster test execution time. If you don't have any heavy tests it
-        # might be faster to take off release and just compile in debug
-        run: cargo build --tests --release
-      - name: cargo test
-        run: cargo test --release
-
-  deny-check:
-    name: cargo-deny
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: EmbarkStudios/cargo-deny-action@v1
-
-  publish-check:
-    name: Publish Check
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          override: true
-      - run: cargo fetch
-      - name: cargo publish check
-        run: cargo publish --dry-run
+      # Cancel the whole workflow if any step fails.
+      - name: Cancel this workflow
+        if: failure()
+        uses: andymckay/cancel-action@0.3

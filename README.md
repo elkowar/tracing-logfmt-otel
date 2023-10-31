@@ -6,9 +6,9 @@
 
 <div align="center">
 
-# `🪵️ tracing-logfmt`
+# `🪵️ tracing-logfmt-otel`
 
-**Logfmt formatter for tracing-subscriber**
+**Logfmt formatter for tracing-subscriber with opentelemetry support**
 
 [![Embark](https://img.shields.io/badge/embark-open%20source-blueviolet.svg)](https://embark.dev)
 [![Embark](https://img.shields.io/badge/discord-embark-%237289da.svg?logo=discord)](https://discord.gg/dAuKfZS)
@@ -17,6 +17,11 @@
 [![dependency status](https://deps.rs/repo/github/EmbarkStudios/tracing-logfmt/status.svg)](https://deps.rs/repo/github/EmbarkStudios/tracing-logfmt)
 [![Build status](https://github.com/EmbarkStudios/tracing-logfmt/workflows/CI/badge.svg)](https://github.com/EmbarkStudios/tracing-logfmt/actions)
 </div>
+
+## Opentelemetry support
+
+This crate is a fork of [EmbarkStudios/tracing-logfmt](https://github.com/EmbarkStudios/tracing-logfmt) that adds
+the [opentelemetry](https://github.com/open-telemetry/opentelemetry-rust) trace and span id to the log output.
 
 ## Logfmt
 
@@ -27,17 +32,6 @@ key=value otherkey="value with spaces" third="with escaped \"chars\""
 ```
 
 There is no strict standard for the format, but it was first documented in [this article](https://brandur.org/logfmt) by Brandur Leach.
-
-## Contribution
-
-[![Contributor Covenant](https://img.shields.io/badge/contributor%20covenant-v1.4-ff69b4.svg)](CODE_OF_CONDUCT.md)
-
-We welcome community contributions to this project.
-
-Please read our [Contributor Guide](CONTRIBUTING.md) for more information on how to get started.
-Please also read our [Contributor Terms](CONTRIBUTING.md#contributor-terms) before you make any contributions.
-
-Any contribution intentionally submitted for inclusion in an Embark Studios project, shall comply with the Rust standard licensing model (MIT OR Apache 2.0) and therefore be dual licensed as described below, without any additional terms or conditions:
 
 ### License
 
