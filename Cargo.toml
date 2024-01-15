@@ -2,7 +2,10 @@
 name = "tracing-logfmt-otel"
 version = "0.3.0"
 edition = "2021"
-authors = ["ElKowar <mail@elkowar.dev>", "Embark <opensource@embark-studios.com>"]
+authors = [
+    "ElKowar <mail@elkowar.dev>",
+    "Embark <opensource@embark-studios.com>",
+]
 license = "MIT OR Apache-2.0"
 description = "A fork of tracing-logfmt with added support for opentelemetry span data"
 homepage = "https://github.com/elkowar/tracing-logfmt"
@@ -13,11 +16,15 @@ readme = "README.md"
 [dependencies]
 nu-ansi-term = { version = "0.50", optional = true }
 opentelemetry_api = "0.20.0"
+opentelemetry = "0.21.0"
+# opentelemetry_api = "0.20.0"
 time = { version = "0.3.7", features = ["formatting"] }
 tracing = "0.1"
 tracing-core = "0.1"
-tracing-opentelemetry = "0.21.0"
-tracing-subscriber = { version = "0.3", default-features = false, features = ["fmt"] }
+tracing-opentelemetry = "0.22.0"
+tracing-subscriber = { version = "0.3", default-features = false, features = [
+    "fmt",
+] }
 
 [features]
 ansi_logs = ["dep:nu-ansi-term"]
