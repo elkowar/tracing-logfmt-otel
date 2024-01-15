@@ -146,7 +146,7 @@ where
                     if let Some(otel_data) =
                         span.extensions().get::<tracing_opentelemetry::OtelData>()
                     {
-                        use opentelemetry_api::trace::TraceContextExt;
+                        use opentelemetry::trace::TraceContextExt;
                         let span_id = match otel_data.builder.span_id {
                             Some(span_id) => span_id,
                             None => otel_data.parent_cx.span().span_context().span_id(),
@@ -157,9 +157,8 @@ where
                             None => otel_data.parent_cx.span().span_context().trace_id(),
                         };
                         serializer.serialize_entry("trace_id", &trace_id.to_string())?;
-                    } else if let Some(builder) = span
-                        .extensions()
-                        .get::<opentelemetry_api::trace::SpanBuilder>()
+                    } else if let Some(builder) =
+                        span.extensions().get::<opentelemetry::trace::SpanBuilder>()
                     {
                         if let Some(span_id) = builder.span_id {
                             serializer.serialize_entry("span_id", &span_id.to_string())?;
