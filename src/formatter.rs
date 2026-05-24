@@ -183,17 +183,12 @@ where
                     if let Some(otel_data) =
                         span.extensions().get::<tracing_opentelemetry::OtelData>()
                     {
-                        use opentelemetry::trace::TraceContextExt;
-                        let span_id = match otel_data.builder.span_id {
-                            Some(span_id) => span_id,
-                            None => otel_data.parent_cx.span().span_context().span_id(),
-                        };
-                        serializer.serialize_entry("span_id", &span_id.to_string())?;
-                        let trace_id = match otel_data.builder.trace_id {
-                            Some(trace_id) => trace_id,
-                            None => otel_data.parent_cx.span().span_context().trace_id(),
-                        };
-                        serializer.serialize_entry("trace_id", &trace_id.to_string())?;
+                        if let Some(span_id) = otel_data.span_id() {
+                            serializer.serialize_entry("span_id", &span_id.to_string())?;
+                        }
+                        if let Some(trace_id) = otel_data.trace_id() {
+                            serializer.serialize_entry("trace_id", &trace_id.to_string())?;
+                        }
                     } else if let Some(builder) =
                         span.extensions().get::<opentelemetry::trace::SpanBuilder>()
                     {
@@ -396,8 +391,12 @@ mod tests {
         sync::{Arc, Mutex},
     };
 
+    use opentelemetry::trace::TracerProvider as _;
     use tracing::info_span;
-    use tracing_subscriber::fmt::{MakeWriter, SubscriberBuilder};
+    use tracing_subscriber::{
+        fmt::{MakeWriter, SubscriberBuilder},
+        layer::SubscriberExt,
+    };
 
     use super::*;
 
@@ -736,8 +735,39 @@ mod tests {
         let content = mock_writer.get_content();
 
         println!("{}", content);
-        assert!(content.contains("module_path=tracing_logfmt::formatter::tests"));
+        assert!(content.contains("module_path=tracing_logfmt_otel::formatter::tests"));
         assert!(content.contains("info"));
+    }
+
+    #[test]
+    #[cfg(not(feature = "ansi_logs"))]
+    fn test_enable_otel_data() {
+        use tracing::subscriber;
+
+        let mock_writer = MockMakeWriter::new();
+        let tracer_provider = opentelemetry_sdk::trace::SdkTracerProvider::builder().build();
+        let tracer = tracer_provider.tracer("test");
+        let telemetry = tracing_opentelemetry::layer().with_tracer(tracer);
+        let subscriber = tracing_subscriber::registry()
+            .with(telemetry)
+            .with(
+                builder::builder()
+                    .with_timestamp(false)
+                    .with_otel_data(true)
+                    .layer()
+                    .with_writer(mock_writer.clone()),
+            );
+
+        subscriber::with_default(subscriber, || {
+            let _span = info_span!("span").entered();
+            tracing::info!("message");
+        });
+
+        let content = mock_writer.get_content();
+
+        println!("{}", content);
+        assert!(content.contains("trace_id="));
+        assert!(content.contains("span_id="));
     }
 
     #[cfg(feature = "ansi_logs")]
