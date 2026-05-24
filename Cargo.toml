@@ -1,10 +1,10 @@
 [package]
 name = "tracing-logfmt-otel"
-version = "0.4.1"
+version = "0.4.2"
 edition = "2021"
 authors = [
-    "ElKowar <mail@elkowar.dev>",
-    "Embark <opensource@embark-studios.com>",
+  "ElKowar <mail@elkowar.dev>",
+  "Embark <opensource@embark-studios.com>",
 ]
 license = "MIT OR Apache-2.0"
 description = "A fork of tracing-logfmt with added support for opentelemetry span data"
@@ -21,7 +21,7 @@ tracing = "0.1"
 tracing-core = "0.1"
 tracing-opentelemetry = "0.32.1"
 tracing-subscriber = { version = "0.3", default-features = false, features = [
-    "fmt",
+  "fmt",
 ] }
 
 [features]
